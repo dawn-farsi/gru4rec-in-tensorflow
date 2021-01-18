@@ -1,37 +1,48 @@
-## Welcome to GitHub Pages
+# Gru4Rec with/without Context in Tensorflow
+It is the tensorflow version of the algorithm in ["Session-based Recommendations With Recurrent Neural Networks"](https://arxiv.org/abs/1511.06939 "Session-based Recommendations With Recurrent Neural Networks").
+The code is based on the original source code at (https://github.com/hidasib/GRU4Rec). I also added a new module called Gru4recWithContext which is based on both user sequential item clicks and user context.
 
-You can use the [editor on GitHub](https://github.com/sfarsinezhad/gru4rec-in-tensorflow/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+## Environment
+You can install all the requirements in a Docker. Or just setup a virtual environment and run:
+```bash
+pip install -r requirements.txt
 ```
+---
+## Services
+The module Gru4rec includes two modules, one is the original Gru4rec. The other is Gru4recWithContext that takes both
+item click sequences and a variety of other information. 
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Data
+Gru4rec takes only item click sequences, each row of data has three fields "SessionId", "ItemId", "Time". 
+Gru4recWithContext takes additional information as well that are tagged with a label, for instance "Context".
+ 
+## Run
 
-### Jekyll Themes
+### Original Gru4rec
+Run training process by  passing data directory, checkpoint directory and data file name.
+```bash
+python ./run/training_gru4rec.py ./data/{} ./checkpoints/ sample_data.csv
+```
+Run evaluation by passing data directory, checkpoint directory, data file name, and batch size.
+```bash
+python ./run/eval_gru4rec.py ./data/{} ./checkpoints/ sample_data.csv 400
+```
+### Gru4recWithContext
+Run training process by  passing data directory, checkpoint directory and data file name.
+```bash
+python ./run/training_gru4rec_with_context.py "Context" ./data/{} ./checkpoints/ sample_data.csv
+```
+Run evaluation by passing data directory, checkpoint directory, data file name, and batch size.
+```bash
+python ./run/eval_gru4rec_with_context.py "Context" ./data/{} ./checkpoints/ sample_data.csv 400
+```
+### Prediction
+You can set up an AWS Lambda for predicting user item scores using Gru4recNp module. Given setting up a Lambda function with Tensorflow is not straight forward.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/sfarsinezhad/gru4rec-in-tensorflow/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Customized Optimizer
+I also wrote RMSPropWithMomentum module which is the optimizer used in the original paper. 
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Literature
+This code is based on the following papers
+- ["Session-based Recommendations With Recurrent Neural Networks"](https://arxiv.org/abs/1511.06939).
+- ["Recurrent Neural Networks with Top-k Gains for Session-based Recommendations"](https://arxiv.org/abs/1706.03847).
