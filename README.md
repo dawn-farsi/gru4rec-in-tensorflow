@@ -1,3 +1,6 @@
+---
+title: gru4rec-in-tensorflow
+---
 # Gru4Rec with/without Context in Tensorflow
 It is the tensorflow version of the algorithm in ["Session-based Recommendations With Recurrent Neural Networks"](https://arxiv.org/abs/1511.06939 "Session-based Recommendations With Recurrent Neural Networks").
 The code is based on the original source code at (https://github.com/hidasib/GRU4Rec). I also added a new module called Gru4recWithContext which is based on both user sequential item clicks and user context.
